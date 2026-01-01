@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Workshops | Aygün ÖZGÜR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050507;
+            --bg-primary: #0a0a0e;
+            --bg-secondary: #111116;
+            --bg-card: #16161c;
+            --bg-card-hover: #1c1c24;
+
+            --accent-1: #6366f1;
+            --accent-2: #f05033;
+            --accent-3: #22d3ee;
+
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+
+            --border-color: rgba(255, 255, 255, 0.06);
+
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated grid background */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 70%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-1) 0%, transparent 70%);
+            top: -200px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
+            top: 50%;
+            right: -150px;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-3) 0%, transparent 70%);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeDown 0.8s var(--ease-out-expo) both;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .header-meta {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-1);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.1s both;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-1);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.9s var(--ease-out-expo) 0.2s both;
+        }
+
+        .hero-title .gradient {
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-3) 50%, var(--accent-1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: fadeUp 0.9s var(--ease-out-expo) 0.3s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Workshop Grid */
+        .workshops {
+            padding: 4rem 0 8rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.4s both;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-color), transparent);
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .workshop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .workshop-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            transition: all 0.5s var(--ease-out-expo);
+            animation: fadeUp 0.8s var(--ease-out-expo) both;
+        }
+
+        .workshop-card:nth-child(1) { animation-delay: 0.5s; }
+        .workshop-card:nth-child(2) { animation-delay: 0.6s; }
+        .workshop-card:nth-child(3) { animation-delay: 0.7s; }
+
+        .workshop-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .workshop-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.03), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .workshop-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .workshop-card:hover::before {
+            opacity: 1;
+        }
+
+        .workshop-card:hover::after {
+            opacity: 1;
+        }
+
+        .workshop-card[data-theme="claude"] { --card-accent: linear-gradient(90deg, var(--accent-1), var(--accent-3)); }
+        .workshop-card[data-theme="git"] { --card-accent: linear-gradient(90deg, var(--accent-2), #ff6b4a); }
+        .workshop-card[data-theme="gpu"] { --card-accent: linear-gradient(90deg, var(--accent-1), #8b5cf6); }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.4s var(--ease-out-back);
+        }
+
+        .workshop-card:hover .card-icon {
+            transform: scale(1.1) rotate(-3deg);
+        }
+
+        .workshop-card[data-theme="claude"] .card-icon {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(34, 211, 238, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .workshop-card[data-theme="git"] .card-icon {
+            background: linear-gradient(135deg, rgba(240, 80, 51, 0.2), rgba(255, 107, 74, 0.1));
+            border: 1px solid rgba(240, 80, 51, 0.3);
+        }
+
+        .workshop-card[data-theme="gpu"] .card-icon {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .card-number {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .card-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            color: var(--text-muted);
+        }
+
+        .card-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .card-arrow svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .workshop-card:hover .card-arrow {
+            background: var(--text-primary);
+        }
+
+        .workshop-card:hover .card-arrow svg {
+            color: var(--bg-deep);
+            transform: translateX(3px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.8s both;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-author {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-author strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-link {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-3);
+        }
+
+        .footer-year {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 5rem 0 4rem;
+            }
+
+            .workshop-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-meta {
+                display: none;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent-1);
+            color: var(--bg-deep);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <header>
+            <a href="#" class="logo">
+                <div class="logo-icon">W</div>
+                <div class="logo-text">Workshops <span>by Aygün</span></div>
+            </a>
+            <div class="header-meta">v1.0</div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-badge">
+                <span>Interactive Presentations</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient">Technical</span><br>Workshops
+            </h1>
+            <p class="hero-subtitle">
+                Deep-dive presentations on modern development tools, workflows, and optimization techniques.
+            </p>
+        </section>
+
+        <section class="workshops">
+            <div class="section-header">
+                <span class="section-label">Available Workshops</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="workshop-grid">
+                <a href="./claude-code/" class="workshop-card" data-theme="claude">
+                    <div class="card-content">
+                        <div class="card-icon">🤖</div>
+                        <div class="card-number">WORKSHOP 01</div>
+                        <h3 class="card-title">Claude Code</h3>
+                        <p class="card-description">
+                            AI-assisted development with Claude Code CLI. Learn to leverage AI for faster, smarter coding workflows.
+                        </p>
+                        <div class="card-footer">
+                            <div class="card-tags">
+                                <span class="card-tag">AI</span>
+                                <span class="card-tag">CLI</span>
+                                <span class="card-tag">Productivity</span>
+                            </div>
+                            <div class="card-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="./git-workflow/" class="workshop-card" data-theme="git">
+                    <div class="card-content">
+                        <div class="card-icon">🔀</div>
+                        <div class="card-number">WORKSHOP 02</div>
+                        <h3 class="card-title">Git Workflow</h3>
+                        <p class="card-description">
+                            Branching strategies, commit conventions, and team collaboration best practices for professional projects.
+                        </p>
+                        <div class="card-footer">
+                            <div class="card-tags">
+                                <span class="card-tag">Git</span>
+                                <span class="card-tag">Teamwork</span>
+                                <span class="card-tag">DevOps</span>
+                            </div>
+                            <div class="card-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="./gpu-pipeline/" class="workshop-card" data-theme="gpu">
+                    <div class="card-content">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-number">WORKSHOP 03</div>
+                        <h3 class="card-title">GPU Pipeline</h3>
+                        <p class="card-description">
+                            GPU architecture, rendering pipelines, and Unity optimization techniques for game developers.
+                        </p>
+                        <div class="card-footer">
+                            <div class="card-tags">
+                                <span class="card-tag">GPU</span>
+                                <span class="card-tag">Unity</span>
+                                <span class="card-tag">Shaders</span>
+                            </div>
+                            <div class="card-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <p class="footer-author">Created by <strong>Aygün ÖZGÜR</strong></p>
+                <div class="footer-links">
+                    <a href="https://github.com/ZenoxZX" class="footer-link" target="_blank">GitHub</a>
+                </div>
+                <p class="footer-year">2025</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Card mouse tracking effect
+        document.querySelectorAll('.workshop-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--mouse-x', `${x}%`);
+                card.style.setProperty('--mouse-y', `${y}%`);
+            });
+        });
+    </script>
+</body>
+</html>
